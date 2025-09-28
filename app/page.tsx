@@ -1,103 +1,237 @@
-import Image from "next/image";
+"use client";
 
-export default function Home() {
+import React, { useEffect, useState } from 'react';
+
+function HomePage() {
+  const [scrollY, setScrollY] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => setScrollY(window.scrollY);
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Calculate animation values
+  const translateY = Math.min(scrollY / 2, 60); // Move up max 60px
+  const opacity = Math.max(1 - scrollY / 200, 0); // Fade out
+  const skew = Math.sin(scrollY / 100) * 10; // Brush skew effect
+  const letterSpace = 0.2 + Math.abs(Math.sin(scrollY / 80)) * 0.8; // Animate letter spacing
+  const shadowSpread = 8 + Math.abs(Math.sin(scrollY / 60)) * 24; // Animate shadow for brush feel
+
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+    <>
+      <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap" rel="stylesheet" />
+      <div
+        style={{
+          position: 'relative',
+          width: '100%',
+          height: '100vh',
+          margin: '0',
+          borderRadius: '0',
+          overflow: 'hidden',
+          boxShadow: '0 20px 24px rgba(255, 255, 255, 0.71)'
+        }}
+      >
+        {/* Header */}
+        <header
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: '25%',
+            width: '100vw',
+            padding: '2rem 0',
+            textAlign: 'center',
+            fontSize: '10rem',
+            fontWeight: 600,
+            color: 'white',
+            textShadow: '0 2px 8px #222',
+            zIndex: 2,
+            fontFamily: "'Permanent Marker', cursive",
+            letterSpacing: '0.2rem',
+            background: 'rgba(233, 226, 226, 0.15)',
+            opacity,
+            transition: 'transform 0.2s, opacity 0.2s, letter-spacing 0.2s, text-shadow 0.2s',
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+            transform: `translate(-50%, 50%) translateY(-${translateY}px) skewX(${skew}deg)`,
+          }}
+        >
+          Strokes
+        </header>
+        <img
+          src="http://localhost:3000/star.jpg"
+          alt="Starry Night by Van Gogh"
+          draggable={false}
+          onContextMenu={e => e.preventDefault()}
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            // opacity: imageOpacity,
+            width: '100vw',
+            height: '100vh',
+            objectFit: 'cover',
+            display: 'sblock',
+            userSelect: 'none',
+            pointerEvents: 'none'
+          }}
+        />
+        {/* Pastel overlay */}
+        <div
+          style={{
+            position: 'sticky',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            background: 'linear-gradient(120deg, rgba(255, 223, 186, 0.5) 0%, rgba(186, 225, 255, 0.5) 50%, rgba(255, 186, 221, 0.5) 100%)',
+            zIndex: 1
+          }}
+        />
+          {/* FIXED Background Image */}
+  <img
+    src="http://localhost:3000/star.jpg"
+    alt="Starry Night by Van Gogh"
+    draggable={false}
+    onContextMenu={e => e.preventDefault()}
+    style={{
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      width: "100vw",
+      height: "100vh",
+      objectFit: "cover",
+      userSelect: "none",
+      pointerEvents: "none",
+      zIndex: 0,
+    }}
+  />
+        <div
+          style={{
+            position: 'absolute',
+            bottom: '50%',
+            left: '50%',
+            transform: `translate(-50%, 50%) translateY(-${translateY}px) skewX(${skew}deg)`,
+            width: '100vw',
+            textAlign: 'center',
+            color: 'white',
+            fontSize: '1rem',
+            fontWeight: 130,
+            letterSpacing: `${letterSpace}rem`,
+            fontFamily: "'Permanent Marker', cursive",
+            textShadow: `0 ${shadowSpread}px ${shadowSpread * 2}px #000, 0 2px 8px #222`,
+            opacity,
+            transition: 'transform 0.2s, opacity 0.2s, letter-spacing 0.2s, text-shadow 0.2s',
+            zIndex: 2
+          }}
+        >
+          Caught in the Art
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+
+            {/* ABOUT ME (second 100vh) */}
+  <div
+    style={{
+      position: "absolute",
+      width: "100vw",
+      bottom: "0",
+      top: 0,
+      height: "150vh",
+      fontWeight: 500,
+      zIndex: 1,
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      justifyContent: "center",
+      color: "white",
+      textAlign: "center",
+      padding: "2rem",
+      fontFamily: "'Typewriter', monospace",
+      textShadow: "0 2px 8px #000",
+    }}
+  >
+    <h2 style={{ fontSize: "4rem", marginBottom: "1rem" }}>Hello World !</h2>
+    <p style={{ fontSize: "1.5rem", maxWidth: "700px", lineHeight: 1.6 }}>
+      I’m <b>Bibhash</b> — a software engineer with 5 years of experience
+      across multiple tech stacks and domain.  
+      I love building cool stuff, be it code, art or my life.
+    </p>
+    <p
+      style={{
+        marginTop: "2rem",
+        fontSize: "1.2rem",
+        background: "rgba(0,0,0,0.5)",
+        padding: "0.8rem 1.5rem",
+        borderRadius: "8px",
+      }}
+    >
+      📧 Reach me at: <b>bibhashmorang1@gmail.com</b>
+      <br />
+      🌐 Scroll for cool stuff
+    </p>
+  </div>
+
+      </div>
+       {/* CONTENT SECTIONS */}
+      <section
+        style={{
+          height: "100vh",
+          background: "#111",
+          color: "white",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          fontSize: "5rem",
+          fontFamily: "'Permanent Marker', cursive",
+        }}
+      >
+        🎨 Art
+      </section>
+
+      <section
+        style={{
+          height: "100vh",
+          background: "#2a2a72",
+          color: "white",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          fontSize: "5rem",
+          fontFamily: "'Permanent Marker', cursive",
+        }}
+      >
+        💻 Projects
+      </section>
+
+      <section
+        style={{
+          height: "100vh",
+          background: "#ff6f61",
+          color: "white",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          fontSize: "5rem",
+          fontFamily: "'Permanent Marker', cursive",
+        }}
+      >
+        ✈️ Trips
+      </section>
+
+      <section
+        style={{
+          height: "100vh",
+          background: "#1e3c72",
+          color: "white",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          fontSize: "5rem",
+          fontFamily: "'Permanent Marker', cursive",
+        }}
+      >
+        🏋️ Bodybuilding
+      </section>
+    </>
   );
 }
+
+export default HomePage;
